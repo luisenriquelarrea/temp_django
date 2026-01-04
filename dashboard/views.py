@@ -2,12 +2,20 @@ from django.contrib.auth.models import User
 
 from rest_framework import permissions, viewsets
 
-from .models import AccionBasica
-from .serializers import AccionBasicaSerializer, UserSerializer
+from .models import AccionBasica, Menu, SeccionMenu
+from .serializers import AccionBasicaSerializer, MenuSerializer, SeccionMenuSerializer, UserSerializer
 
 class AccionBasicaViewSet(viewsets.ModelViewSet):
     queryset = AccionBasica.objects.all()
     serializer_class = AccionBasicaSerializer
+
+class MenuViewSet(viewsets.ModelViewSet):
+    queryset = Menu.objects.all()
+    serializer_class = MenuSerializer
+
+class SeccionMenuViewSet(viewsets.ModelViewSet):
+    queryset = SeccionMenu.objects.all()
+    serializer_class = SeccionMenuSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     """
