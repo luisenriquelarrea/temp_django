@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 User = get_user_model()
 
@@ -128,7 +129,7 @@ class AccionBasica(models.Model):
     
 class AccionGrupo(models.Model):
     accion = models.ForeignKey(
-        "AccionBasica",   # or "Accion" if that is your actual model name
+        "Accion",
         on_delete=models.RESTRICT,
         null=True,
         blank=True,
@@ -136,7 +137,7 @@ class AccionGrupo(models.Model):
     )
 
     grupo = models.ForeignKey(
-        "Grupo",
+        Group,
         on_delete=models.RESTRICT,
         null=True,
         blank=True,
@@ -172,46 +173,12 @@ class AccionGrupo(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["accion", "grupo"],
-                name="accion_grupo_accion_id_grupo_id_unique"
+                name="accion_grupo_accion_grupo_unique"
             )
         ]
 
     def __str__(self):
-        return f"{self.accion} ↔ {self.grupo}"    
-class Grupo(models.Model):
-    descripcion = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True
-    )
-
-    status = models.BooleanField(default=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    user_created = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.RESTRICT,
-        null=True,
-        blank=True,
-        related_name="grupos_creados"
-    )
-    user_updated = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.RESTRICT,
-        null=True,
-        blank=True,
-        related_name="grupos_actualizados"
-    )
-
-    class Meta:
-        db_table = "grupo"
-        verbose_name = "Grupo"
-        verbose_name_plural = "Grupos"
-
-    def __str__(self):
-        return self.descripcion or f"Grupo {self.id}"
+        return f"{self.accion} → {self.grupo}"
     
 class Menu(models.Model):
     descripcion = models.CharField(

@@ -3,7 +3,6 @@ from .models import (
     AccionBasica,
     Accion,
     AccionGrupo,
-    Grupo,
     Menu,
     SeccionMenu,
     SeccionMenuInput,
@@ -13,7 +12,6 @@ from .models import (
 admin.site.register(AccionBasica)
 admin.site.register(Accion)
 admin.site.register(AccionGrupo)
-admin.site.register(Grupo)
 admin.site.register(Menu)
 admin.site.register(SeccionMenu)
 admin.site.register(SeccionMenuInput)
