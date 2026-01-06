@@ -1,8 +1,28 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 
 from .models import AccionBasica, Menu, SeccionMenu
 
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        user = authenticate(
+            username=data["username"],
+            password=data["password"]
+        )
+
+        if not user:
+            raise serializers.ValidationError("Invalid credentials")
+
+        return {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "groups": GroupSerializer(user.groups.all(), many=True).data
+        }
 class AccionBasicaSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccionBasica
@@ -16,6 +36,11 @@ class AccionBasicaSerializer(serializers.ModelSerializer):
             "created_at", "updated_at",
             "user_created_id", "user_updated_id"
         ]
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = "__all__"
 
 class MenuSerializer(serializers.ModelSerializer):
     class Meta:

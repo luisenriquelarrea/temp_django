@@ -1,10 +1,24 @@
 from django.contrib.auth.models import User
 
 from rest_framework import permissions, viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from .models import AccionBasica, Menu, SeccionMenu
-from .serializers import AccionBasicaSerializer, MenuSerializer, SeccionMenuSerializer, UserSerializer
+from .serializers import LoginSerializer, AccionBasicaSerializer, MenuSerializer, SeccionMenuSerializer, UserSerializer
 
+class LoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user_data = serializer.validated_data
+
+        return Response({
+            "user": user_data
+        })
 class AccionBasicaViewSet(viewsets.ModelViewSet):
     queryset = AccionBasica.objects.all()
     serializer_class = AccionBasicaSerializer
