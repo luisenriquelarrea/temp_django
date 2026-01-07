@@ -1,6 +1,9 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group, User
+
 from rest_framework import serializers
+
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import AccionBasica, Menu, SeccionMenu
 
@@ -17,11 +20,19 @@ class LoginSerializer(serializers.Serializer):
         if not user:
             raise serializers.ValidationError("Invalid credentials")
 
+        refresh = RefreshToken.for_user(user)
+
         return {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "groups": GroupSerializer(user.groups.all(), many=True).data
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "groups": GroupSerializer(
+                    user.groups.all(), many=True
+                ).data
+            }
         }
 class AccionBasicaSerializer(serializers.ModelSerializer):
     class Meta:
