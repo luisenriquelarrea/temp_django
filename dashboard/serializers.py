@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import AccionBasica, Menu, SeccionMenu
+from .models import Accion, AccionBasica, AccionGrupo, Menu, SeccionMenu
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -34,6 +34,16 @@ class LoginSerializer(serializers.Serializer):
                 ).data
             }
         }
+
+class AccionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Accion
+        fields = "__all__"
+        read_only_fields = [
+            "created_at", "updated_at",
+            "user_created_id", "user_updated_id"
+        ]
+
 class AccionBasicaSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccionBasica
@@ -47,12 +57,6 @@ class AccionBasicaSerializer(serializers.ModelSerializer):
             "created_at", "updated_at",
             "user_created_id", "user_updated_id"
         ]
-
-class GroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Group
-        fields = "__all__"
-
 class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
@@ -80,6 +84,20 @@ class SeccionMenuSerializer(serializers.ModelSerializer):
             "created_at", "updated_at",
             "user_created_id", "user_updated_id"
         ]
+class AccionGrupoSerializer(serializers.ModelSerializer):
+    seccionMenu = SeccionMenuSerializer(
+        source="accion.seccion_menu",
+        read_only=True
+    )
+
+    class Meta:
+        model = AccionGrupo
+        fields = ["id", "seccionMenu"]
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = "__all__"
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

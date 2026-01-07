@@ -7,6 +7,7 @@ from dashboard import views
 
 router = routers.DefaultRouter()
 router.register(r'accion_basica', views.AccionBasicaViewSet)
+router.register(r"accion_grupo", views.AccionGrupoViewSet, basename="accion_grupo")
 router.register(r"menu", views.MenuViewSet)
 router.register(r"seccion_menu", views.SeccionMenuViewSet)
 router.register(r"users", views.UserViewSet)
