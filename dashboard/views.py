@@ -7,7 +7,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-from .models import AccionGrupo
+from dashboard.services.accion_grupo_service import (
+    get_allowed_menus_for_user
+)
 
 from .models import AccionBasica, Menu, SeccionMenu
 from .serializers import (LoginSerializer, AccionBasicaSerializer, AccionGrupoSerializer, 
@@ -35,19 +37,7 @@ class AccionGrupoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="allowed_menus")
     def allowed_menus(self, request):
-        user = request.user
-
-        grupos = user.groups.all()
-
-        acciones = AccionGrupo.objects.filter(
-            grupo__in=grupos,
-            status=True,
-            accion__status=True
-        ).select_related(
-            "accion",
-            "accion__seccion_menu",
-            "accion__seccion_menu__menu"
-        )
+        acciones = get_allowed_menus_for_user(request.user)
 
         serializer = AccionGrupoSerializer(acciones, many=True)
         return Response(serializer.data)
