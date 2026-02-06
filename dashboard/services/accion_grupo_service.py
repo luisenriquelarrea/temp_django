@@ -1,6 +1,26 @@
 from dashboard.models import AccionGrupo
 
-def get_allowed_menus_for_user(user):
+def get_allowed_breadcrumbs_for_group(user, seccionMenuId):
+    """
+    Returns AccionGrupo queryset for breadcrumbs allowed to a user
+    """
+    grupos = user.groups.all()
+
+    return (
+        AccionGrupo.objects
+        .filter(
+            grupo__in=grupos,
+            status=True,
+            accion__status=True,
+            accion__on_breadcrumb=True,
+            accion__seccion_menu_id=seccionMenuId,
+        )
+        .select_related(
+            "accion",
+        )
+    )
+
+def get_allowed_menus_for_group(user):
     """
     Returns AccionGrupo queryset for menus allowed to a user
     """

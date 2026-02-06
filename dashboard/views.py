@@ -8,12 +8,21 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from dashboard.services.accion_grupo_service import (
-    get_allowed_menus_for_user
+    get_allowed_breadcrumbs_for_group,
+    get_allowed_menus_for_group,
 )
 
 from .models import AccionBasica, Menu, SeccionMenu
-from .serializers import (LoginSerializer, AccionBasicaSerializer, AccionGrupoSerializer, 
-                          MenuSerializer, SeccionMenuSerializer, UserSerializer)
+
+from .serializers import (
+    LoginSerializer, 
+    AccionBasicaSerializer, 
+    AccionGrupoActionsSerializer,
+    AccionGrupoSeccionMenuSerializer,
+    MenuSerializer, 
+    SeccionMenuSerializer, 
+    UserSerializer
+)
 
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -35,11 +44,29 @@ class AccionBasicaViewSet(viewsets.ModelViewSet):
 class AccionGrupoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
+    @action(detail=False, methods=["post"], url_path="allowed_breadcrumbs")
+    def allowed_breadcrumbs(self, request):
+        seccion_menu_id = request.data.get("seccionMenuId")
+
+        if not seccion_menu_id:
+            return Response(
+                {"detail": "seccionMenuId is required"},
+                status=400
+            )
+
+        acciones = get_allowed_breadcrumbs_for_group(
+            request.user,
+            seccion_menu_id
+        )
+
+        serializer = AccionGrupoActionsSerializer(acciones, many=True)
+        return Response(serializer.data)
+
     @action(detail=False, methods=["get"], url_path="allowed_menus")
     def allowed_menus(self, request):
-        acciones = get_allowed_menus_for_user(request.user)
+        acciones = get_allowed_menus_for_group(request.user)
 
-        serializer = AccionGrupoSerializer(acciones, many=True)
+        serializer = AccionGrupoSeccionMenuSerializer(acciones, many=True)
         return Response(serializer.data)
 
 class MenuViewSet(viewsets.ModelViewSet):

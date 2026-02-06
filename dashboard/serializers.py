@@ -85,6 +85,10 @@ class SeccionMenuSerializer(serializers.ModelSerializer):
             "user_created_id", "user_updated_id"
         ]
 class AccionGrupoSerializer(serializers.ModelSerializer):
+    accion = AccionSerializer(
+        read_only=True
+    )
+
     seccionMenu = SeccionMenuSerializer(
         source="accion.seccion_menu",
         read_only=True
@@ -92,7 +96,26 @@ class AccionGrupoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AccionGrupo
-        fields = ["id", "seccionMenu"]
+        fields = ["id", "accion", "seccionMenu"]
+
+class AccionGrupoActionsSerializer(serializers.ModelSerializer):
+    accion = AccionSerializer(
+        read_only=True
+    )
+
+    class Meta:
+        model = AccionGrupo
+        fields = ["accion"]
+
+class AccionGrupoSeccionMenuSerializer(serializers.ModelSerializer):
+    seccionMenu = SeccionMenuSerializer(
+        source="accion.seccion_menu",
+        read_only=True
+    )
+
+    class Meta:
+        model = AccionGrupo
+        fields = ["seccionMenu"]
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
