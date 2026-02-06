@@ -14,11 +14,12 @@ from dashboard.services.accion_grupo_service import (
     get_allowed_table_actions_for_group,
 )
 
-from .models import AccionBasica, Menu, SeccionMenu
+from .models import AccionBasica, AccionGrupo, Menu, SeccionMenu
 
 from .serializers import (
     LoginSerializer, 
     AccionBasicaSerializer, 
+    AccionGrupoSerializer,
     AccionGrupoActionsSerializer,
     AccionGrupoSeccionMenuSerializer,
     MenuSerializer, 
@@ -43,8 +44,14 @@ class AccionBasicaViewSet(viewsets.ModelViewSet):
     queryset = AccionBasica.objects.all()
     serializer_class = AccionBasicaSerializer
 
-class AccionGrupoViewSet(viewsets.ModelViewSet):
+class AccionGrupoViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        accion_grupo = AccionGrupo.objects.all()
+
+        serializer = AccionGrupoSerializer(accion_grupo, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, methods=["post"], url_path="allowed_breadcrumbs")
     def allowed_breadcrumbs(self, request):
@@ -84,9 +91,9 @@ class AccionGrupoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="allowed_menus")
     def allowed_menus(self, request):
-        acciones = get_allowed_menus_for_group(request.user)
+        seccion_menus = get_allowed_menus_for_group(request.user)
 
-        serializer = AccionGrupoSeccionMenuSerializer(acciones, many=True)
+        serializer = AccionGrupoSeccionMenuSerializer(seccion_menus, many=True)
         return Response(serializer.data)
     
     @action(detail=False, methods=["post"], url_path="allowed_table_actions")

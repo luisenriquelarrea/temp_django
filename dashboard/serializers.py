@@ -35,28 +35,6 @@ class LoginSerializer(serializers.Serializer):
             }
         }
 
-class AccionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Accion
-        fields = "__all__"
-        read_only_fields = [
-            "created_at", "updated_at",
-            "user_created_id", "user_updated_id"
-        ]
-
-class AccionBasicaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AccionBasica
-        fields = [
-            "id", "descripcion", "call_method", "label", "icon",
-            "on_breadcrumb", "on_navbar", "on_table", "status",
-            "created_at", "updated_at",
-            "user_created_id", "user_updated_id"
-        ]
-        read_only_fields = [
-            "created_at", "updated_at",
-            "user_created_id", "user_updated_id"
-        ]
 class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
@@ -84,19 +62,55 @@ class SeccionMenuSerializer(serializers.ModelSerializer):
             "created_at", "updated_at",
             "user_created_id", "user_updated_id"
         ]
+
+class AccionSerializer(serializers.ModelSerializer):
+    seccionMenu = SeccionMenuSerializer(
+        source="seccion_menu",
+        read_only=True
+    )
+    class Meta:
+        model = Accion
+        fields = [
+            "seccionMenu", "id", "descripcion", "call_method",
+            "label", "icon", "on_breadcrumb", "on_navbar", 
+            "on_table", "status"
+        ]
+        read_only_fields = [
+            "created_at", "updated_at",
+            "user_created_id", "user_updated_id"
+        ]
+
+class AccionBasicaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccionBasica
+        fields = [
+            "id", "descripcion", "call_method", "label", "icon",
+            "on_breadcrumb", "on_navbar", "on_table", "status",
+            "created_at", "updated_at",
+            "user_created_id", "user_updated_id"
+        ]
+        read_only_fields = [
+            "created_at", "updated_at",
+            "user_created_id", "user_updated_id"
+        ]
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = "__all__"
+
 class AccionGrupoSerializer(serializers.ModelSerializer):
     accion = AccionSerializer(
         read_only=True
     )
 
-    seccionMenu = SeccionMenuSerializer(
-        source="accion.seccion_menu",
+    grupo = GroupSerializer(
         read_only=True
     )
 
     class Meta:
         model = AccionGrupo
-        fields = ["id", "accion", "seccionMenu"]
+        fields = ["id", "accion", "grupo"]
 
 class AccionGrupoActionsSerializer(serializers.ModelSerializer):
     accion = AccionSerializer(
@@ -116,11 +130,6 @@ class AccionGrupoSeccionMenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccionGrupo
         fields = ["seccionMenu"]
-
-class GroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Group
-        fields = "__all__"
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
