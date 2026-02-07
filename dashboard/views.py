@@ -55,11 +55,11 @@ class AccionGrupoViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["post"], url_path="allowed_breadcrumbs")
     def allowed_breadcrumbs(self, request):
-        seccion_menu_id = request.data.get("seccionMenuId")
+        seccion_menu_id = request.data.get("seccion_menu_id")
 
         if not seccion_menu_id:
             return Response(
-                {"detail": "seccionMenuId is required"},
+                {"detail": "seccion_menu_id is required"},
                 status=400
             )
 
@@ -73,11 +73,11 @@ class AccionGrupoViewSet(viewsets.ViewSet):
     
     @action(detail=False, methods=["post"], url_path="allowed_navbar")
     def allowed_navbar(self, request):
-        seccion_menu_id = request.data.get("seccionMenuId")
+        seccion_menu_id = request.data.get("seccion_menu_id")
 
         if not seccion_menu_id:
             return Response(
-                {"detail": "seccionMenuId is required"},
+                {"detail": "seccion_menu_id is required"},
                 status=400
             )
 
@@ -98,11 +98,11 @@ class AccionGrupoViewSet(viewsets.ViewSet):
     
     @action(detail=False, methods=["post"], url_path="allowed_table_actions")
     def allowed_table_actions(self, request):
-        seccion_menu_id = request.data.get("seccionMenuId")
+        seccion_menu_id = request.data.get("seccion_menu_id")
 
         if not seccion_menu_id:
             return Response(
-                {"detail": "seccionMenuId is required"},
+                {"detail": "seccion_menu_id is required"},
                 status=400
             )
 

@@ -64,14 +64,13 @@ class SeccionMenuSerializer(serializers.ModelSerializer):
         ]
 
 class AccionSerializer(serializers.ModelSerializer):
-    seccionMenu = SeccionMenuSerializer(
-        source="seccion_menu",
+    seccion_menu = SeccionMenuSerializer(
         read_only=True
     )
     class Meta:
         model = Accion
         fields = [
-            "seccionMenu", "id", "descripcion", "call_method",
+            "seccion_menu", "id", "descripcion", "call_method",
             "label", "icon", "on_breadcrumb", "on_navbar", 
             "on_table", "status"
         ]
@@ -122,14 +121,14 @@ class AccionGrupoActionsSerializer(serializers.ModelSerializer):
         fields = ["accion"]
 
 class AccionGrupoSeccionMenuSerializer(serializers.ModelSerializer):
-    seccionMenu = SeccionMenuSerializer(
+    seccion_menu = SeccionMenuSerializer(
         source="accion.seccion_menu",
         read_only=True
     )
 
     class Meta:
         model = AccionGrupo
-        fields = ["seccionMenu"]
+        fields = ["seccion_menu"]
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
