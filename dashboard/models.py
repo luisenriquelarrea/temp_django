@@ -9,7 +9,7 @@ User = get_user_model()
 class Accion(models.Model):
     seccion_menu = models.ForeignKey(
         "SeccionMenu",
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name="acciones"
