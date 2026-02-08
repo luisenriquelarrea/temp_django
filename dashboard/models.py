@@ -74,7 +74,7 @@ class Accion(models.Model):
         ]
 
     def __str__(self):
-        return self.label or self.descripcion or f"Accion {self.id}"
+        return f"{self.seccion_menu} - {self.descripcion}"
 class AccionBasica(models.Model):
     descripcion = models.CharField(
         max_length=255,
