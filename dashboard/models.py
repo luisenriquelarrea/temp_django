@@ -130,7 +130,7 @@ class AccionBasica(models.Model):
 class AccionGrupo(models.Model):
     accion = models.ForeignKey(
         "Accion",
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name="grupos_relacionados"
@@ -138,7 +138,7 @@ class AccionGrupo(models.Model):
 
     grupo = models.ForeignKey(
         Group,
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name="acciones_relacionadas"

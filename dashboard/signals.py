@@ -1,6 +1,18 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import SeccionMenu, Accion, AccionBasica
+from django.contrib.auth.models import Group
+
+from .models import SeccionMenu, Accion, AccionBasica, AccionGrupo
+
+@receiver(post_save, sender=Accion)
+def create_accion_grupo(sender, instance, created, **kwargs):
+    if created:
+        grupo = Group.objects.get(name="administrador")
+
+        AccionGrupo.objects.get_or_create(
+            accion=instance,
+            grupo=grupo
+        )
 
 @receiver(post_save, sender=SeccionMenu)
 def create_default_acciones(sender, instance, created, **kwargs):
