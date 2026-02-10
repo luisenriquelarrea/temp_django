@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'dashboard.apps.DashboardConfig',
+    'nomina.apps.NominaConfig'
 ]
 
 SITE_ID = 1
