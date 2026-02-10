@@ -29,8 +29,11 @@ class EmpleadoAdmin(admin.ModelAdmin):
         "departamento",
         "nombre_completo",
         "rfc",
+        "sd",
+        "sdi",
         "status",
     )
+    exclude = ("sdi",)
 
 @admin.register(Nomina)
 class NominaAdmin(admin.ModelAdmin):

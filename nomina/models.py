@@ -1,6 +1,10 @@
 from django.db import models
 from django.conf import settings
 
+from nomina.services.nomina_service import (
+    calcular_factor_integracion
+)
+
 from decimal import Decimal
 
 class Plaza(models.Model):
@@ -140,6 +144,11 @@ class Empleado(models.Model):
         blank=True,
         related_name="employees_updated"
     )
+
+    def save(self, *args, **kwargs):
+        factor = calcular_factor_integracion()
+        self.sdi = (self.sd * factor).quantize(Decimal("0.01"))
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = "empleado"
