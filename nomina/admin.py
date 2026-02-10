@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from nomina.services.nomina_service import process_nomina_detalle
+
 from .models import (
     Plaza,
     Departamento,
@@ -44,6 +46,12 @@ class NominaAdmin(admin.ModelAdmin):
         "fecha_pago",
         "status",
     )
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+
+        if not change:
+            process_nomina_detalle(obj)
 
 @admin.register(Recibo)
 class ReciboAdmin(admin.ModelAdmin):

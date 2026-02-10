@@ -1,50 +1,42 @@
-from decimal import Decimal
+from django.db import transaction
 
-# === Constantes (LFT / IMSS) ===
-AGUINALDO_DIAS = Decimal("15")        # Aguinaldo mínimo por ley
-VACACIONES_DIAS = Decimal("12")       # Vacaciones 1er año (LFT 2023+)
-PRIMA_VACACIONAL = Decimal("0.25")    # 25% mínimo legal
-DIAS_ANIO = Decimal("365")            # Días del año usados por IMSS
+from nomina.models import (
+    Empleado,
+    Recibo
+)
 
+from .nomina_math import (
+    calcular_sueldos_salarios
+)
 
-def calcular_factor_integracion(
-    aguinaldo_dias=AGUINALDO_DIAS,
-    vacaciones_dias=VACACIONES_DIAS,
-    prima_vacacional=PRIMA_VACACIONAL,
-):
-    """
-    Calcula el Factor de Integración para el Salario Diario Integrado (SDI).
-
-    Fórmula oficial IMSS:
-        Factor = (365 + Aguinaldo + (Vacaciones × Prima Vacacional)) / 365
-
-    Donde:
-        - Aguinaldo: días de aguinaldo otorgados al trabajador
-        - Vacaciones: días de vacaciones anuales
-        - Prima Vacacional: porcentaje de la prima (ej. 0.25 = 25%)
-
-    El factor se multiplica por el Salario Diario (SD) para obtener el SDI:
-
-        SDI = SD × Factor
-
-    Este factor:
-        - Siempre es ≥ 1
-        - Se recalcula cuando cambian prestaciones o antigüedad
-        - Es utilizado exclusivamente para cálculos IMSS
-    """
-
-    # Prestaciones integrables:
-    #  - Aguinaldo completo
-    #  - Prima vacacional aplicada solo a días de vacaciones
-    prestaciones = (
-        aguinaldo_dias
-        + (vacaciones_dias * prima_vacacional)
+@transaction.atomic
+def process_nomina_detalle(nomina):
+    empleados = Empleado.objects.filter(
+        plaza=nomina.plaza,
+        departamento=nomina.departamento,
+        status=True
     )
 
-    # Suma de días base del año + prestaciones
-    dias_integrados = DIAS_ANIO + prestaciones
+    recibos = []
 
-    # Factor de integración final
-    factor_integracion = dias_integrados / DIAS_ANIO
+    for empleado in empleados:
+        salario_diario = empleado.sd
+        periodicidad_pago = empleado.periodicidad_pago
 
-    return factor_integracion
+        if salario_diario == 0 or periodicidad_pago == 0:
+            continue
+
+        sueldos_salarios = calcular_sueldos_salarios(salario_diario, periodicidad_pago)
+
+        recibos.append(
+            Recibo(
+                nomina=nomina,
+                empleado=empleado,
+                periodicidad_pago=periodicidad_pago,
+                sd=salario_diario,
+                sdi=empleado.sdi,
+                sueldos_salarios=sueldos_salarios,
+            )
+        )
+
+    Recibo.objects.bulk_create(recibos)

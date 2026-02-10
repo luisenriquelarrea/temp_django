@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from nomina.services.nomina_service import (
+from nomina.services.nomina_math import (
     calcular_factor_integracion
 )
 
@@ -210,7 +210,7 @@ class Nomina(models.Model):
 class Recibo(models.Model):
     nomina = models.ForeignKey(
         "nomina",
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name="recibos"
