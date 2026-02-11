@@ -310,3 +310,171 @@ class Recibo(models.Model):
 
     def __str__(self):
         return self.empleado
+    
+class IsrQuincenal(models.Model):
+    ejercicio = models.IntegerField(
+        null=True,
+        blank=True
+    )
+
+    limite_inferior = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    limite_superior = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    cuota_fija = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    porcentaje_excedente = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    status = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    user_created = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.RESTRICT,
+        null=True,
+        blank=True,
+        related_name="isrs_quincenal_created"
+    )
+    user_updated = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.RESTRICT,
+        null=True,
+        blank=True,
+        related_name="isrs_quincenal_updated"
+    )
+
+    class Meta:
+        db_table = "isr_quincenal"
+        verbose_name = "ISR quincenal"
+        verbose_name_plural = "ISR quincenal"
+
+    def __str__(self):
+        return str(self.limite_inferior)
+
+class IsrSemanal(models.Model):
+    ejercicio = models.IntegerField(
+        null=True,
+        blank=True
+    )
+
+    limite_inferior = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    limite_superior = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    cuota_fija = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    porcentaje_excedente = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    status = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    user_created = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.RESTRICT,
+        null=True,
+        blank=True,
+        related_name="isrs_semanal_created"
+    )
+    user_updated = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.RESTRICT,
+        null=True,
+        blank=True,
+        related_name="isrs_semanal_updated"
+    )
+
+    class Meta:
+        db_table = "isr_semanal"
+        verbose_name = "ISR semanal"
+        verbose_name_plural = "ISR semanal"
+
+    def __str__(self):
+        return str(self.limite_inferior)
+
+class Uma(models.Model):
+    ejercicio = models.IntegerField(
+        null=True,
+        blank=True
+    )
+
+    valor = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    porcentaje_uma = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    factor_mensual = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    status = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    user_created = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.RESTRICT,
+        null=True,
+        blank=True,
+        related_name="umas_created"
+    )
+    user_updated = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.RESTRICT,
+        null=True,
+        blank=True,
+        related_name="umas_updated"
+    )
+
+    class Meta:
+        db_table = "uma"
+        verbose_name = "UMA"
+        verbose_name_plural = "UMA"
+
+    def __str__(self):
+        return str(self.valor)

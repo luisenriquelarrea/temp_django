@@ -7,7 +7,10 @@ from .models import (
     Departamento,
     Empleado,
     Nomina,
-    Recibo
+    Recibo,
+    IsrSemanal,
+    IsrQuincenal,
+    Uma
 )
 
 @admin.register(Plaza)
@@ -68,4 +71,36 @@ class ReciboAdmin(admin.ModelAdmin):
         "subsidio_empleo_entregado",
         "imss",
         "neto"
+    )
+
+@admin.register(IsrSemanal)
+class IsrSemanalAdmin(admin.ModelAdmin):
+    list_display = (
+        "ejercicio",
+        "limite_inferior",
+        "limite_superior",
+        "cuota_fija",
+        "porcentaje_excedente",
+        "status"
+    )
+
+@admin.register(IsrQuincenal)
+class IsrQuincenalAdmin(admin.ModelAdmin):
+    list_display = (
+        "ejercicio",
+        "limite_inferior",
+        "limite_superior",
+        "cuota_fija",
+        "porcentaje_excedente",
+        "status"
+    )
+
+@admin.register(Uma)
+class UmaAdmin(admin.ModelAdmin):
+    list_display = (
+        "ejercicio",
+        "valor",
+        "porcentaje_uma",
+        "factor_mensual",
+        "status"
     )
