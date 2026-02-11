@@ -100,6 +100,7 @@ class UmaAdmin(admin.ModelAdmin):
     list_display = (
         "ejercicio",
         "valor",
+        "limite_max",
         "porcentaje_uma",
         "factor_mensual",
         "status"

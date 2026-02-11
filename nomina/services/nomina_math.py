@@ -49,6 +49,33 @@ def calcular_factor_integracion(
 
     return factor_integracion
 
+def calcular_subsidio_empleo_causado(uma, periodicidad_pago):
+    """
+    Calcula el subsidio al empleo causado para un periodo específico
+    según la nueva mecánica basada en porcentaje de UMA.
+
+    :param uma: objeto UMA del ejercicio (contiene valor, factor_mensual y porcentaje_uma)
+    :param periodicidad_pago: número de días del periodo (7=semanal, 15=quincenal, etc.)
+    :return: subsidio al empleo causado para el periodo
+    """
+
+    # Convertir la UMA diaria a UMA mensual
+    # (Ejemplo: UMA diaria * 30.4)
+    uma_mensual = uma.valor * uma.factor_mensual
+
+    # Calcular el subsidio mensual aplicando el porcentaje establecido por ley
+    # (Ejemplo: UMA mensual * 15.02%)
+    subsidio_mensual = uma_mensual * uma.porcentaje_uma
+
+    # Obtener subsidio diario dividiendo entre el factor mensual (30.4)
+    subsidio_diario = subsidio_mensual / uma.factor_mensual
+
+    # Calcular subsidio causado para el periodo
+    # (subsidio diario * número de días del periodo de pago)
+    subsidio_empleo_causado = subsidio_diario * periodicidad_pago
+
+    return subsidio_empleo_causado.quantize(Decimal("0.01"))
+
 def calcular_sueldos_salarios(salario_diario, n_dias_pagados):
     """
     Calcula el importe de sueldos y salarios del periodo.
