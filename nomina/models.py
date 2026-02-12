@@ -253,7 +253,7 @@ class Recibo(models.Model):
         default=Decimal("0.00")
     )
 
-    isr_pagar = models.DecimalField(
+    isr_retenido = models.DecimalField(
         max_digits=10, 
         decimal_places=2,
         default=Decimal("0.00")

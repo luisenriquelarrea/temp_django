@@ -13,6 +13,8 @@ from nomina.models import (
 from .nomina_math import (
     calcular_isr_determinado,
     calcular_isr_retenido,
+    calcular_imss,
+    calcular_neto,
     calcular_sueldos_salarios,
     calcular_subsidio_empleo_causado
 )
@@ -74,6 +76,8 @@ def process_nomina_detalle(nomina):
 
         sueldos_salarios = calcular_sueldos_salarios(salario_diario, periodicidad_pago)
 
+        percepciones_exentas = 0
+
         subsidio_empleo_causado = 0
 
         if sueldos_salarios <= uma.limite_max:
@@ -89,6 +93,10 @@ def process_nomina_detalle(nomina):
 
         subsidio_empleo_entregado = tmp.get("subsidio_entregado")
 
+        imss = calcular_imss(salario_diario, periodicidad_pago, uma)
+
+        neto = calcular_neto(sueldos_salarios, percepciones_exentas, subsidio_empleo_entregado, isr_retenido, imss)
+
         recibos.append(
             Recibo(
                 nomina=nomina,
@@ -97,6 +105,12 @@ def process_nomina_detalle(nomina):
                 sd=salario_diario,
                 sdi=empleado.sdi,
                 sueldos_salarios=sueldos_salarios,
+                isr_determidado=isr_determidado,
+                isr_retenido=isr_retenido,
+                subsidio_empleo_causado=subsidio_empleo_causado,
+                subsidio_empleo_entregado=subsidio_empleo_entregado,
+                imss=imss,
+                neto=neto
             )
         )
 

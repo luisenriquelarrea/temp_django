@@ -66,7 +66,7 @@ class ReciboAdmin(admin.ModelAdmin):
         "sdi",
         "sueldos_salarios",
         "isr_determinado",
-        "isr_pagar",
+        "isr_retenido",
         "subsidio_empleo_causado",
         "subsidio_empleo_entregado",
         "imss",
