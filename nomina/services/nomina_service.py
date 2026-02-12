@@ -11,6 +11,7 @@ from nomina.models import (
 )
 
 from .nomina_math import (
+    calcular_isr_determinado,
     calcular_sueldos_salarios,
     calcular_subsidio_empleo_causado
 )
@@ -22,9 +23,9 @@ def get_isr(ejercicio, sueldos_salarios, periodicidad_pago):
     }.get(periodicidad_pago)
 
     if not model:
-        return None
+        raise ValueError(f"ISR model not found for periodicidad_pago {periodicidad_pago}")
 
-    return model.objects.filter(
+    isr = model.objects.filter(
         ejercicio=ejercicio,
         status=True,
         limite_inferior__lte=sueldos_salarios
@@ -32,6 +33,11 @@ def get_isr(ejercicio, sueldos_salarios, periodicidad_pago):
         Q(limite_superior__gte=sueldos_salarios) |
         Q(limite_superior__isnull=True)
     ).order_by('limite_inferior').first()
+
+    if not isr:
+        raise ValueError(f"ISR record not found")
+    
+    return isr
 
 def get_uma(ejercicio):
     uma = Uma.objects.filter(
@@ -71,6 +77,10 @@ def process_nomina_detalle(nomina):
 
         if sueldos_salarios <= uma.limite_max:
             subsidio_empleo_causado = calcular_subsidio_empleo_causado(uma, periodicidad_pago)
+
+        isr = get_isr(ejercicio, sueldos_salarios, periodicidad_pago)
+
+        isr_determidado = calcular_isr_determinado(isr, sueldos_salarios)
 
         recibos.append(
             Recibo(

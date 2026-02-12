@@ -49,6 +49,37 @@ def calcular_factor_integracion(
 
     return factor_integracion
 
+def calcular_isr_determinado(isr, importe_gravado):
+    """
+    Calcula el ISR determinado conforme a la tarifa del Art. 96 de la LISR (México).
+
+    Parámetros:
+        isr: Objeto que representa el renglón de la tarifa aplicable, el cual contiene:
+            - limite_inferior (Decimal): Límite inferior del rango
+            - porcentaje_excedente (Decimal): Porcentaje aplicable sobre el excedente
+            - cuota_fija (Decimal): Cuota fija correspondiente al rango
+        importe_gravado (Decimal): Base gravable del periodo (ingreso gravado)
+
+    Retorna:
+        Decimal: ISR determinado redondeado a 2 decimales.
+    """
+
+    # Determinar el excedente sobre el límite inferior
+    # Fórmula LISR:
+    # Excedente = Base gravable - Límite inferior
+    excedente = importe_gravado - isr.limite_inferior
+
+    # Aplicar el porcentaje sobre el excedente
+    # ISR sobre excedente = Excedente × (Porcentaje / 100)
+    isr_excedente = excedente * isr.porcentaje_excedente / 100
+
+    # Sumar la cuota fija establecida en la tarifa
+    # ISR determinado = ISR sobre excedente + Cuota fija
+    isr_determinado = isr_excedente + isr.cuota_fija
+
+    # Redondear a 2 decimales conforme a práctica fiscal (moneda nacional)
+    return isr_determinado.quantize(Decimal("0.01"))
+
 def calcular_subsidio_empleo_causado(uma, periodicidad_pago):
     """
     Calcula el subsidio al empleo causado para un periodo específico
