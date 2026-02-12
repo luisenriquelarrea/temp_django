@@ -85,9 +85,9 @@ def process_nomina_detalle(nomina):
 
         isr = get_isr(ejercicio, sueldos_salarios, periodicidad_pago)
 
-        isr_determidado = calcular_isr_determinado(isr, sueldos_salarios)
+        isr_determinado = calcular_isr_determinado(isr, sueldos_salarios)
 
-        tmp = calcular_isr_retenido(isr_determidado, subsidio_empleo_causado)
+        tmp = calcular_isr_retenido(isr_determinado, subsidio_empleo_causado)
 
         isr_retenido = tmp.get("isr_retenido")
 
@@ -105,7 +105,7 @@ def process_nomina_detalle(nomina):
                 sd=salario_diario,
                 sdi=empleado.sdi,
                 sueldos_salarios=sueldos_salarios,
-                isr_determidado=isr_determidado,
+                isr_determinado=isr_determinado,
                 isr_retenido=isr_retenido,
                 subsidio_empleo_causado=subsidio_empleo_causado,
                 subsidio_empleo_entregado=subsidio_empleo_entregado,

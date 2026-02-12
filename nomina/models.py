@@ -205,7 +205,7 @@ class Nomina(models.Model):
         verbose_name_plural = "Nominas"
 
     def __str__(self):
-        return self.fecha
+        return str(self.fecha)
 
 class Recibo(models.Model):
     nomina = models.ForeignKey(
@@ -309,7 +309,8 @@ class Recibo(models.Model):
         verbose_name_plural = "Recibos"
 
     def __str__(self):
-        return self.empleado
+        return f"Recibo {self.id} - {self.empleado}"
+
     
 class IsrQuincenal(models.Model):
     ejercicio = models.IntegerField(

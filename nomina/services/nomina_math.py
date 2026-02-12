@@ -284,7 +284,7 @@ def calcular_subsidio_empleo_causado(uma, periodicidad_pago):
 
     # Calcular el subsidio mensual aplicando el porcentaje establecido por ley
     # (Ejemplo: UMA mensual * 15.02%)
-    subsidio_mensual = uma_mensual * uma.porcentaje_uma
+    subsidio_mensual = uma_mensual * (uma.porcentaje_uma / 100)
 
     # Obtener subsidio diario dividiendo entre el factor mensual (30.4)
     subsidio_diario = subsidio_mensual / uma.factor_mensual
