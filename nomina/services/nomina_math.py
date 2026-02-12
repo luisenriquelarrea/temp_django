@@ -80,6 +80,33 @@ def calcular_isr_determinado(isr, importe_gravado):
     # Redondear a 2 decimales conforme a práctica fiscal (moneda nacional)
     return isr_determinado.quantize(Decimal("0.01"))
 
+def calcular_isr_retenido(isr_determinado, subsidio_causado):
+    """
+    Calcula el ISR a retener conforme a LISR considerando subsidio al empleo.
+
+    Parámetros:
+        isr_determinado (Decimal): ISR calculado conforme tarifa Art. 96 LISR.
+        subsidio_causado (Decimal): Subsidio al empleo causado en el periodo.
+
+    Retorna:
+        dict con:
+            - isr_retenido
+            - subsidio_entregado
+    """
+
+    resultado = isr_determinado - subsidio_causado
+
+    if resultado > 0:
+        return {
+            "isr_retenido": resultado.quantize(Decimal("0.01")),
+            "subsidio_entregado": Decimal("0.00")
+        }
+    else:
+        return {
+            "isr_retenido": Decimal("0.00"),
+            "subsidio_entregado": abs(resultado).quantize(Decimal("0.01"))
+        }
+
 def calcular_subsidio_empleo_causado(uma, periodicidad_pago):
     """
     Calcula el subsidio al empleo causado para un periodo específico

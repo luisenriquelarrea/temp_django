@@ -12,6 +12,7 @@ from nomina.models import (
 
 from .nomina_math import (
     calcular_isr_determinado,
+    calcular_isr_retenido,
     calcular_sueldos_salarios,
     calcular_subsidio_empleo_causado
 )
@@ -81,6 +82,12 @@ def process_nomina_detalle(nomina):
         isr = get_isr(ejercicio, sueldos_salarios, periodicidad_pago)
 
         isr_determidado = calcular_isr_determinado(isr, sueldos_salarios)
+
+        tmp = calcular_isr_retenido(isr_determidado, subsidio_empleo_causado)
+
+        isr_retenido = tmp.get("isr_retenido")
+
+        subsidio_empleo_entregado = tmp.get("subsidio_entregado")
 
         recibos.append(
             Recibo(
